@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CoreModule } from '../core/core.module';
 import { AuthController } from './controller/auth.controller';
-import { AdminModule } from '../admins/admin.module';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
     CoreModule,
-    AdminModule
+    AdminModule,
   ],
   controllers: [
     AuthController
