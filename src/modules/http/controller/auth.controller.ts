@@ -16,8 +16,6 @@ export class AuthController {
   ): Promise<any> {
     const admin = await this.iAuthService.login(authenticationDto);
 
-    console.log(admin);
-
     return AuthResponse.serialize(admin);
   }
 }
