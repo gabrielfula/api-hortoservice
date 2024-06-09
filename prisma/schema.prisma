@@ -15,7 +15,7 @@ datasource db {
 
 model admin {
   id         Int       @id @default(autoincrement())
-  uuid       String    @default(uuid())
+  uuid       String    @unique @default(uuid())
   username   String    @unique
   password   String
   token      String
@@ -24,4 +24,57 @@ model admin {
   deleted_at DateTime?
 
   @@map("admins")
+}
+
+model personal_data {
+  id         Int       @id @default(autoincrement())
+  uuid       String    @unique @default(uuid())
+  name       String
+  phone      String?
+  gender     GENDER
+  email      String?
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+  client     client[]
+
+  @@map("personal_data")
+}
+
+model client {
+  id               Int           @id @default(autoincrement())
+  uuid             String        @unique @default(uuid())
+  personal_data    personal_data @relation(fields: [personal_data_id], references: [id])
+  address          address       @relation(fields: [address_id], references: [id])
+  created_at       DateTime      @default(now())
+  updated_at       DateTime?     @updatedAt
+  deleted_at       DateTime?
+  personal_data_id Int
+  address_id       Int
+
+  @@map("clients")
+}
+
+model address {
+  id           Int       @id @default(autoincrement())
+  uuid         String    @unique @default(uuid())
+  address      String
+  number       String?
+  neighborhood String
+  city         String
+  state        String
+  zipcode      String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime? @updatedAt
+  deleted_at   DateTime?
+  client       client[]
+
+  @@map("addresses")
+}
+
+// FAZER MODAL PARA SERVIÇOS PRTESTADOS 
+
+enum GENDER {
+  M
+  F
 }
