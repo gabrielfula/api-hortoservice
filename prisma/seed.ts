@@ -1,33 +1,43 @@
 import { GENDER, PrismaClient } from '@prisma/client'
-
+import { firstNames, lastNames } from './data-seed';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const personal_data = await prisma.personal_data.createMany({
-    data: {
-      name: "Jõao Felix",
-      gender: GENDER.M,
-      email: "joao@gmail.com",
-      phone: "19987319223"
-    }
-  })
-  const address = await prisma.address.createMany({
-    data: {
-      address: "Rua cid campaoli",
-      number: "231",
-      neighborhood: "Pq Santa Barbara",
-      city: "Campinas",
-      state: "São Paulo",
-      zipcode: "13064331",
-    }
-  })
+  
+  const getRandomName = () => {
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    return `${firstName} ${lastName}`;
+  };
+
+  const personalData = await prisma.personal_data.createMany({
+    data: Array.from({ length: 20 }).map((_, i) => ({
+      gender: i % 2 === 0 ? GENDER.M : GENDER.F,
+      email: `user${i + 1}@example.com`,
+      phone: `1998731922${i.toString().padStart(2, '0')}`
+    }))
+  });
+
+  const addresses = await prisma.address.createMany({
+    data: Array.from({ length: 20 }).map((_, i) => ({
+      address: `Rua Exemplo ${i + 1}`,
+      number: `${100 + i}`,
+      neighborhood: `Bairro ${i + 1}`,
+      city: "Cidade Exemplo",
+      state: "Estado Exemplo",
+      zipcode: `13064${i.toString().padStart(3, '0')}`
+    }))
+  });
+
   const clients = await prisma.client.createMany({
-    data: {
-      personal_data_id: 1,
-      address_id: 1,
-    }
-  })
+    data: Array.from({ length: 20 }).map((_, i) => ({
+      name: getRandomName(),
+      personal_data_id: i + 1,
+      address_id: i + 1
+    }))
+  });
+
 }
 
 main()
@@ -38,4 +48,4 @@ main()
     console.error(e)
     await prisma.$disconnect()
     process.exit(1)
-  })
+  });

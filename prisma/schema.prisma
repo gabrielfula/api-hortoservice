@@ -29,7 +29,6 @@ model admin {
 model personal_data {
   id         Int       @id @default(autoincrement())
   uuid       String    @unique @default(uuid())
-  name       String
   phone      String?
   gender     GENDER
   email      String?
@@ -44,6 +43,7 @@ model personal_data {
 model client {
   id               Int           @id @default(autoincrement())
   uuid             String        @unique @default(uuid())
+  name             String
   personal_data    personal_data @relation(fields: [personal_data_id], references: [id])
   address          address       @relation(fields: [address_id], references: [id])
   created_at       DateTime      @default(now())
