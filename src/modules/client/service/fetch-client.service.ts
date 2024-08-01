@@ -13,6 +13,17 @@ export class FetchClientService implements IFetchClientService{
     const clients = await this.iClientRepository.getAll();
 
     return clients;
-  } 
+  }
+
+  async paginate(filters: any) {
+
+    const take = parseInt(filters.limit);
+
+    const skip = parseInt(filters.page) - 1;
+
+    const clients = await this.iClientRepository.paginate(take, skip);
+
+    return clients;
+  }
 
 }

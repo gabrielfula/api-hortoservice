@@ -1,5 +1,6 @@
-import { Controller, Get, Inject } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Req } from "@nestjs/common";
 import { FETCH_CLIENT_SERVICE_INTERFACE, IFetchClientService } from "src/modules/client/interface/service/ifetch-client.service";
+import { ResponsePagination } from "../responses/paginate-response";
 
 @Controller('clients')
 export class ClientController {
@@ -8,9 +9,20 @@ export class ClientController {
   ) {}
 
   @Get("/")
-  async get(): Promise<any> {
-    const clients = await this.iFetchClientService.listAll();
+  async pagination(
+    @Req() req
+  ): Promise<any> {
+    const clients = await this.iFetchClientService.paginate(req.query);
 
-    return clients;
+    return ResponsePagination.serialize(clients);
+  }
+
+  @Get("/:uuid")
+  async details(
+    @Param('uuid') uuid: string
+  ): Promise<any> {
+    const client = await this.iFetchClientService.listAll();
+
+    return client;
   }
 }

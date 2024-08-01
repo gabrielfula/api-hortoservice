@@ -16,4 +16,17 @@ export class ClientRepository implements IClientRepository {
 
     return clients;
   }
+
+  async paginate(take: number, skip: number) {
+    const clients = await this.prisma.client.findMany({
+      skip: skip,
+      take: take,
+      include: {
+        address: true,
+        personal_data: true
+      }
+    })
+
+    return clients;
+  }
 }
